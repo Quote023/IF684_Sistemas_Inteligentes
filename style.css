@@ -1,0 +1,61 @@
+html,
+body {
+  color-scheme: dark;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+canvas {
+  display: block;
+  margin: auto;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+nav button {
+  /* margin: 0 8px 0 8px; */
+  padding: 1rem 2rem;
+  cursor: pointer;
+  background-color: rgb(120, 105, 255);
+  border-radius: 5px;
+  border: 1px solid #000;
+  color: #000;
+  font-weight: bold;
+}
+
+nav button.selected {
+  color: red;
+}
+
+#seletor_principal {
+  display: flex;
+  padding: 0 1rem;
+}
+
+#header_principal {
+  text-align: center;
+
+  & h1 {
+    margin-bottom: 0;
+  }
+}
+
+.p5Canvas {
+  margin: 0
+}
+
+#display_principal {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}

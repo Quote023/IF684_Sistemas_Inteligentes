@@ -2,11 +2,9 @@ class Grid {
   constructor(linhas, colunas, tamCelula, cores, custo) {
     this.nLinhas = linhas;
     this.nColunas = colunas;
-    this.tamanhoCelula = tamCelula;
 
     this.terreno = [];
-
-    createCanvas(this.nColunas * this.tamanhoCelula, this.nLinhas * this.tamanhoCelula);
+    createCanvas(this.nColunas * TAM_CELS, this.nLinhas * TAM_CELS);
 
     const noiseStep = 0.3;
     let noiseOffset = 0.0
@@ -30,15 +28,37 @@ class Grid {
       }
     }
 
+    this.inicio = { x: 0, y: 0 }
+    this.fim = { x: 0, y: 0 }
 
+    do {
+      this.inicio.y = floor(random(this.nLinhas));
+      this.inicio.x = floor(random(this.nColunas));
+    } while (this.terreno[this.inicio.y][this.inicio.x].custo < 0);
+    do {
+      this.fim.y = floor(random(this.nLinhas));
+      this.fim.x = floor(random(this.nColunas));
+    } while (this.terreno[this.fim.y][this.fim.x].custo < 0);
+
+    console.log(this.inicio)
+    console.log(this.fim)
   }
 
   display() {
     for (let linha = 0; linha < this.nLinhas; linha++) {
       for (let col = 0; col < this.nColunas; col++) {
         fill(this.terreno[linha][col].cor);
-        rect(linha * this.tamanhoCelula, col * this.tamanhoCelula, this.tamanhoCelula, this.tamanhoCelula);
+        rect(linha * TAM_CELS, col * TAM_CELS, TAM_CELS, TAM_CELS);
       }
     }
+
+
+    // Draw the starting and ending positions
+    fill(0, 0, 255);
+    star(XtoPos(this.inicio.x), XtoPos(this.inicio.y), TAM_CELS / 2, TAM_CELS / 4, 5);
+    fill(255, 255, 0);
+    star(XtoPos(this.fim.x), XtoPos(this.fim.y), TAM_CELS / 2, TAM_CELS / 4, 10);
   }
 }
+
+const XtoPos = (pos) => pos * TAM_CELS + TAM_CELS / 2

@@ -14,11 +14,42 @@
     <h2>Alunos: Alexandre Candido Souza, Klarissa Morais</h2>
   </header>
   <main id="display_principal">
+    <nav id="seletor_principal">
+      <button class="botao_algo">A*</button>
+      <button class="botao_algo">UCS</button>
+      <button class="botao_algo">DFS</button>
+      <button class="botao_algo">BFS</button>
+      <button class="botao_algo">GS</button>
+    </nav>
     <div id="canvas_container"></div>
   </main>
   <script src="constants.js"></script>
+  <script src="utils.js"></script>
+  <script src="agente.js"></script>
   <script src="terrain.js"></script>
+  <script src="algoritmos/buscaBase.js"></script>
+  <script src="algoritmos/dfs.js"></script>
+  <script src="algoritmos/bfs.js"></script>
+  <script src="algoritmos/ucs.js"></script>
+  <script src="algoritmos/gs.js"></script>
+  <script src="algoritmos/aStar.js"></script>
   <script src="sketch.js"></script>
 </body>
+<script>
+  const botaos = document.getElementsByClassName("botao_algo");
+  botaos.forEach((btn, i) => {
+    btn.addEventListener("click", () => {
+      indiceAlgoritmo = i;
+      trocarAlgoritmo = true;
+      botaos.forEach((b2, i2) => {
+        if (i === i2) {
+          b2.classList.add("selected");
+        } else {
+          b2.classList.remove("selected");
+        }
+      });
+    });
+  });
+</script>
 
 </html>

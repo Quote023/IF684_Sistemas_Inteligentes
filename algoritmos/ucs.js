@@ -1,0 +1,3 @@
+class UCS extends BuscaBase {
+
+}

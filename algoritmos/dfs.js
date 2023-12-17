@@ -1,42 +1,39 @@
 class DFS extends BuscaBase {
   constructor(terreno) {
     super(terreno);
-    this.pais = [];
+    this.anterior = [];
   }
 
-  dfs(y, x, target, caminhoBusca) {
+  dfs(partida, chegada, caminho) {
+    const { x, y } = partida;
     this.visitados[y][x] = true;
-    caminhoBusca.push([y, x, this.matriz[y][x]]);
+    caminho.push(this.grid[y][x]);
 
-    if (y == target.y && x == target.x) {
-      return caminhoBusca;
-    }
+    if (mesmaPosicao(partida, chegada)) return caminho;
 
-    let neighbors = this.obterVizinhos(y, x);
-    this.listaVizinhos.push(neighbors);
+    const vizinhos = this.obterVizinhos(y, x);
+    this.listaVizinhos.push(vizinhos);
 
-    for (let i = 0; i < neighbors.length; i++) {
-      let neighbor = neighbors[i];
-      if (!this.visitados[neighbor[0]][neighbor[1]]) {
-        this.pais[neighbor[0]][neighbor[1]] = [y, x];
-        caminhoBusca = this.dfs(neighbor[0], neighbor[1], target, caminhoBusca);
+    for (const vizinho of vizinhos) {
+      if (!this.visitados[vizinho.y][vizinho.x]) {
+        this.anterior[vizinho.y][vizinho.x] = partida;
+        caminho = this.dfs(vizinho, chegada, caminho);
 
-        if (caminhoBusca[caminhoBusca.length - 1][0] == target.y && caminhoBusca[caminhoBusca.length - 1][1] == target.x) {
-          return caminhoBusca;
-        }
+        if (mesmaPosicao(ultimo(caminho), chegada))
+          return caminho; // parar quando achar
       }
     }
 
-    return caminhoBusca;
+    return caminho;
   }
 
   buscarCaminho(inicio, fim) {
-    for (let i = 0; i < this.matriz.length; i++) {
+    for (let i = 0; i < this.grid.length; i++) {
       this.visitados[i] = [];
-      this.pais[i] = [];
-      for (let j = 0; j < this.matriz[i].length; j++) {
+      this.anterior[i] = [];
+      for (let j = 0; j < this.grid[i].length; j++) {
         this.visitados[i][j] = false;
-        this.pais[i][j] = null;
+        this.anterior[i][j] = null;
       }
     }
 
@@ -45,17 +42,18 @@ class DFS extends BuscaBase {
     this.caminhoBusca = [];
     this.listaVizinhos = [];
 
-    this.caminhoBusca = this.dfs(inicio.y, inicio.x, fim, []);
+    this.caminhoBusca = this.dfs(inicio, fim, []);
 
     let optimalPath = [];
-    let current = [fim.y, fim.x, this.matriz[fim.y][fim.x]];
+    let current = this.grid[fim.y][fim.x];
     optimalPath.push(current);
-    while (current[0] !== inicio.y || current[1] !== inicio.x) {
-      current = this.pais[current[0]][current[1]];
-      optimalPath.unshift([current[0], current[1], this.matriz[current[0]][current[1]]]);
+
+    while (current.y !== inicio.y || current.x !== inicio.x) {
+      current = this.anterior[current.y][current.x];
+      optimalPath.unshift(current);
     }
 
-    this.caminhoAgente = optimalPath;
+    this.caminhoAgente = this.caminhoBusca;
     return this.caminhoAgente;
   }
 

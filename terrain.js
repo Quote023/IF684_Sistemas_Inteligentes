@@ -19,7 +19,8 @@ class Grid {
 
         const valor = floor(noise(noiseLinha, noiseCol, noiseTempo) * cores.length);
         this.terreno[linha][col] = {
-          posicao: { x: col, y: linha },
+          x: col,
+          y: linha,
           valor: valor,
           custo: custo[valor],
           cor: cores[valor]
@@ -28,17 +29,15 @@ class Grid {
       }
     }
 
-    this.inicio = { x: 0, y: 0 }
-    this.fim = { x: 0, y: 0 }
+    this.inicio = this.terreno[0][0]
+    this.fim = this.terreno[0][0]
 
     do {
-      this.inicio.y = floor(random(this.nLinhas));
-      this.inicio.x = floor(random(this.nColunas));
-    } while (this.terreno[this.inicio.y][this.inicio.x].custo < 0);
+      this.inicio = this.terreno[floor(random(this.nLinhas))][floor(random(this.nColunas))];
+    } while (this.inicio.custo < 0);
     do {
-      this.fim.y = floor(random(this.nLinhas));
-      this.fim.x = floor(random(this.nColunas));
-    } while (this.terreno[this.fim.y][this.fim.x].custo < 0);
+      this.fim = this.terreno[floor(random(this.nLinhas))][floor(random(this.nColunas))];
+    } while (this.fim.custo < 0);
 
     console.log(this.inicio)
     console.log(this.fim)

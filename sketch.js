@@ -23,6 +23,8 @@ function draw() {
   if (trocarAlgoritmo) {
     agente = new Agente(grid.inicio.x, grid.inicio.y)
     algoritmo = new ALGORITMOS[indiceAlgoritmo](grid.terreno);
+    iteracao = 0;
+    trocarAlgoritmo = false;
   }
   if (iteracao === 0) {
     const caminho = algoritmo.buscarCaminho(grid.inicio, grid.fim);
@@ -30,6 +32,8 @@ function draw() {
   }
 
   grid.display();
+  iteracao++;
+  return;
   if (iteracao >= 1) algoritmo.display(grid.cellSize);
   if (iteracao >= 2) agente.percorrerCaminho();
   if (agente.pos.x !== grid.fim.x || agente.pos.y !== grid.fim.y) return;

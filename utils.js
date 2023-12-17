@@ -14,6 +14,13 @@ function star(x, y, radius1, radius2, npoints) {
   endShape(CLOSE);
 }
 
+function ultimo(arr) {
+  return arr[Math.max(arr.length - 1, 0)];
+}
+
+function mesmaPosicao(vec1, vec2) {
+  return vec1.x === vec2.x && vec1.y === vec2.y;
+}
 
 class PriorityQueue {
   constructor() {

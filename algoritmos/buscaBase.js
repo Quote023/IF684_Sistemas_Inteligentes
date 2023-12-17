@@ -1,10 +1,11 @@
 class BuscaBase {
   constructor(terreno) {
     this.visitados = [];
-    this.matriz = terreno;
+    this.grid = terreno;
     this.caminhoBusca = [];
     this.caminhoAgente = [];
     this.listaVizinhos = [];
+
     this.movimentosRealizados = 0;
   }
 
@@ -14,17 +15,17 @@ class BuscaBase {
 
   obterVizinhos(linha, coluna) {
     let vizinhos = [];
-    if (linha > 0 && this.matriz[linha - 1][coluna].custo != -1) {
-      vizinhos.push([linha - 1, coluna]);
+    if (linha > 0 && this.grid[linha - 1][coluna].custo != -1) {
+      vizinhos.push(this.grid[linha - 1][coluna]);
     }
-    if (coluna < this.matriz[0].length - 1 && this.matriz[linha][coluna + 1].custo != -1) {
-      vizinhos.push([linha, coluna + 1]);
+    if (coluna < this.grid[0].length - 1 && this.grid[linha][coluna + 1].custo != -1) {
+      vizinhos.push(this.grid[linha][coluna + 1]);
     }
-    if (linha < this.matriz.length - 1 && this.matriz[linha + 1][coluna].custo != -1) {
-      vizinhos.push([linha + 1, coluna]);
+    if (linha < this.grid.length - 1 && this.grid[linha + 1][coluna].custo != -1) {
+      vizinhos.push(this.grid[linha + 1][coluna]);
     }
-    if (coluna > 0 && this.matriz[linha][coluna - 1].custo != -1) {
-      vizinhos.push([linha, coluna - 1]);
+    if (coluna > 0 && this.grid[linha][coluna - 1].custo != -1) {
+      vizinhos.push(this.grid[linha][coluna - 1]);
     }
     return vizinhos;
   }

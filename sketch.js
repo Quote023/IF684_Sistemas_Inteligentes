@@ -32,10 +32,9 @@ function draw() {
   }
 
   grid.display();
-  iteracao++;
-  return;
-  if (iteracao >= 1) algoritmo.display(grid.cellSize);
-  if (iteracao >= 2) agente.percorrerCaminho();
+  if (iteracao >= 0) iteracao += algoritmo.display();
+  // if (iteracao >= 1) iteracao += agente.percorrerCaminho();
+
   if (agente.pos.x !== grid.fim.x || agente.pos.y !== grid.fim.y) return;
 
   grid.novoFim();

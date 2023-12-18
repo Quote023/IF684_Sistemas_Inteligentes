@@ -1,10 +1,14 @@
 class BFS extends BuscaBase {
+
+    // Ele herda da "busca base" fila e pais, pais uma matriz para armazenar os pais de cada célula
     constructor(terreno) {
         super(terreno);
         this.fila = [];
         this.pais = [];
     }
 
+    //Ele realiza uma busca em largura do agente até o objeto. Ele utiliza uma fila para armazenar os nós a serem explorados. O loop principal continua até que todos os nós relevantes sejam visitados.
+    //Durante a busca, o código marca os nós visitados, enfileira os vizinhos não visitados, adiciona esses vizinhos ao caminho de busca e define os pais de cada nó para reconstruir o caminho ótimo posteriormente.
     bfs(inicioLinha, inicioColuna, alvo) {
         const marcarVisitado = (linha, coluna) => this.visitado[linha][coluna] = true;
         const enfileirar = (linha, coluna) => this.fila.push([linha, coluna]);
@@ -41,6 +45,7 @@ class BFS extends BuscaBase {
         return encontrado ? this.construirCaminhoOtimo(inicioLinha, inicioColuna, alvo) : null;
     }
 
+    // metodos básicos e necessários
     definirCaminho(inicioPonto, fimPonto) {
         this.inicializarArrays();
         this.caminhoAgente = this.bfs(inicioPonto[0], inicioPonto[1], fimPonto);
@@ -63,6 +68,7 @@ class BFS extends BuscaBase {
         this.fila = [];
     }
 
+    //Este método reconstrói o caminho ótimo do ponto inicial ao ponto alvo usando as informações armazenadas na matriz pais
     construirCaminhoOtimo(inicioLinha, inicioColuna, alvo) {
         let caminhoOtimo = [];
         let atual = [alvo[0], alvo[1], this.matriz[alvo[0]][alvo[1]]];

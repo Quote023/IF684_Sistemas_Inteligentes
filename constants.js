@@ -7,4 +7,4 @@ const CORES_TERRENO = [
   [48, 124, 109], //atoleiro
   [78, 201, 176], //agua
 ];
-const CUSTO_TERRENO = [-1, 0, 5, 10];
+const CUSTO_TERRENO = [-1, 1, 5, 10];

@@ -1,6 +1,6 @@
 let grid;
-let indiceAlgoritmo = 2;
-let trocarAlgoritmo = true;
+let indiceAlgoritmo = undefined;
+let trocarAlgoritmo = false;
 let agente;
 let algoritmo;
 let novoCaminho = false;
@@ -36,9 +36,9 @@ function draw() {
 
   grid.display();
   if (iteracao >= 0) iteracao += algoritmo.display();
-  // if (iteracao >= 1) iteracao += agente.percorrerCaminho();
+  if (iteracao >= 1) iteracao += agente.percorrerCaminho();
 
-  if (agente.pos.x !== grid.fim.x || agente.pos.y !== grid.fim.y) return;
+  if (!mesmaPosicao(agente.pos, CelulaToPosicao(grid.fim))) return;
 
   grid.novoFim();
   novoCaminho = true;

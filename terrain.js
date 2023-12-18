@@ -1,18 +1,15 @@
 class Grid {
   constructor() {
-    this.nLinhas = N_LINHAS;
-    this.nColunas = N_COLS;
-
     this.terreno = [];
-    createCanvas(this.nColunas * TAM_CELS, this.nLinhas * TAM_CELS);
+    createCanvas(N_COLS * TAM_CELS, N_LINHAS * TAM_CELS);
 
     const noiseStep = 0.3;
     let noiseOffset = 0.0
-    for (let linha = 0; linha < this.nLinhas; linha++) {
+    for (let linha = 0; linha < N_LINHAS; linha++) {
       if (!this.terreno[linha])
         this.terreno[linha] = [];
 
-      for (let col = 0; col < this.nColunas; col++) {
+      for (let col = 0; col < N_COLS; col++) {
         const noiseLinha = noiseStep * linha;
         const noiseCol = noiseStep * col;
         const noiseTempo = noiseStep * frameCount;
@@ -33,19 +30,30 @@ class Grid {
     this.fim = this.terreno[0][0]
 
     do {
-      this.inicio = this.terreno[floor(random(this.nLinhas))][floor(random(this.nColunas))];
+      this.inicio = this.terreno[floor(random(N_LINHAS))][floor(random(N_COLS))];
     } while (this.inicio.custo < 0);
     do {
-      this.fim = this.terreno[floor(random(this.nLinhas))][floor(random(this.nColunas))];
+      this.fim = this.terreno[floor(random(N_LINHAS))][floor(random(N_COLS))];
     } while (this.fim.custo < 0);
 
     console.log(this.inicio)
     console.log(this.fim)
   }
 
+  novoFim() {
+    do {
+      this.inicio = this.terreno[floor(random(N_LINHAS))][floor(random(N_COLS))];
+    } while (this.inicio.custo < 0);
+    do {
+      this.fim = this.terreno[floor(random(N_LINHAS))][floor(random(N_COLS))];
+    } while (this.fim.custo < 0);
+
+
+  }
+
   display() {
-    for (let linha = 0; linha < this.nLinhas; linha++) {
-      for (let col = 0; col < this.nColunas; col++) {
+    for (let linha = 0; linha < N_LINHAS; linha++) {
+      for (let col = 0; col < N_COLS; col++) {
         fill(this.terreno[linha][col].cor);
         rect(col * TAM_CELS, linha * TAM_CELS, TAM_CELS, TAM_CELS);
         fill([0, 0, 0, 100])
@@ -62,4 +70,6 @@ class Grid {
   }
 }
 
+const CelulaToPosicao = ({ x, y }) => ({ x: XtoPos(x), y: XtoPos(y) });
+const PosicaoToVector = ({ x, y }) => createVector(x, y);
 const XtoPos = (pos) => pos * TAM_CELS + TAM_CELS / 2

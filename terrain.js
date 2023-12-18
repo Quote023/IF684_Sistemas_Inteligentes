@@ -1,7 +1,7 @@
 class Grid {
-  constructor(linhas, colunas, tamCelula, cores, custo) {
-    this.nLinhas = linhas;
-    this.nColunas = colunas;
+  constructor() {
+    this.nLinhas = N_LINHAS;
+    this.nColunas = N_COLS;
 
     this.terreno = [];
     createCanvas(this.nColunas * TAM_CELS, this.nLinhas * TAM_CELS);
@@ -17,13 +17,13 @@ class Grid {
         const noiseCol = noiseStep * col;
         const noiseTempo = noiseStep * frameCount;
 
-        const valor = floor(noise(noiseLinha, noiseCol, noiseTempo) * cores.length);
+        const valor = floor(noise(noiseLinha, noiseCol, noiseTempo) * CORES_TERRENO.length);
         this.terreno[linha][col] = {
           x: col,
           y: linha,
           valor: valor,
-          custo: custo[valor],
-          cor: cores[valor]
+          custo: CUSTO_TERRENO[valor],
+          cor: CORES_TERRENO[valor]
         };
         noiseOffset += noiseStep;
       }
@@ -47,7 +47,9 @@ class Grid {
     for (let linha = 0; linha < this.nLinhas; linha++) {
       for (let col = 0; col < this.nColunas; col++) {
         fill(this.terreno[linha][col].cor);
-        rect(linha * TAM_CELS, col * TAM_CELS, TAM_CELS, TAM_CELS);
+        rect(col * TAM_CELS, linha * TAM_CELS, TAM_CELS, TAM_CELS);
+        fill([0, 0, 0, 100])
+        text(this.terreno[linha][col].custo, (col) * TAM_CELS, (linha + 1) * TAM_CELS);
       }
     }
 

@@ -1,8 +1,9 @@
 let grid;
-let indiceAlgoritmo = undefined;
-let trocarAlgoritmo = false;
+let indiceAlgoritmo = 2;
+let trocarAlgoritmo = true;
 let agente;
 let algoritmo;
+let novoCaminho = false;
 let iteracao = 0;
 const ALGORITMOS = [
   AStar,
@@ -13,7 +14,7 @@ const ALGORITMOS = [
 ]
 
 function setup() {
-  grid = new Grid(N_LINHAS, N_COLS, TAM_CELS, CORES_TERRENO, CUSTO_TERRENO);
+  grid = new Grid();
   grid.display();
 }
 
@@ -25,10 +26,12 @@ function draw() {
     algoritmo = new ALGORITMOS[indiceAlgoritmo](grid.terreno);
     iteracao = 0;
     trocarAlgoritmo = false;
+    novoCaminho = true;
   }
-  if (iteracao === 0) {
+  if (novoCaminho) {
     const caminho = algoritmo.buscarCaminho(grid.inicio, grid.fim);
     agente.definirCaminho(caminho);
+    novoCaminho = false;
   }
 
   grid.display();
@@ -38,5 +41,6 @@ function draw() {
   if (agente.pos.x !== grid.fim.x || agente.pos.y !== grid.fim.y) return;
 
   grid.novoFim();
+  novoCaminho = true;
   iteracao = 0;
 }

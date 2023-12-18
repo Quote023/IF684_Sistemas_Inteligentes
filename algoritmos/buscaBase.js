@@ -27,13 +27,19 @@ class BuscaBase {
   display() {
     push();
     noStroke();
-    fill(0, 0, 200);
     rectMode(RADIUS);
     this.movimentosRealizados += 1;
     this.caminhoBusca.forEach((celula, i) => {
       if (i >= this.movimentosRealizados) return;
       if (!this.listaVizinhos[i]) return;
+      fill(0, 0, 200);
       circle(celula.x * TAM_CELS + TAM_CELS / 2, celula.y * TAM_CELS + TAM_CELS / 2, TAM_CELS / 2)
+      for (const vizinho of this.listaVizinhos[i]) {
+        if (mesmaPosicao(vizinho, this.caminhoBusca[0])) continue;
+        fill(0, 0, 200, 150);
+        circle(vizinho.x * TAM_CELS + TAM_CELS / 2, vizinho.y * TAM_CELS + TAM_CELS / 3, TAM_CELS / 3);
+
+      }
     })
     pop();
     if (this.movimentosRealizados == this.caminhoBusca.length) return 1;

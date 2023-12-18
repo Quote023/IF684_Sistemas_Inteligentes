@@ -16,6 +16,7 @@ class Agente {
     for (const celula of caminho) {
       this.movsAbs.push({ ...CelulaToPosicao(celula), custo: celula.custo });
     }
+    this.pos = this.movsAbs[0];
   }
 
   percorrerCaminho() {

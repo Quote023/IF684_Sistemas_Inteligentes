@@ -7,10 +7,10 @@ let novoCaminho = false;
 let iteracao = 0;
 const ALGORITMOS = [
   AStar,
-  BFS,
+  UCS,
   DFS,
+  BFS,
   GS,
-  UCS
 ]
 
 function setup() {

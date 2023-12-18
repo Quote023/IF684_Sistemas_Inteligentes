@@ -44,16 +44,16 @@ class DFS extends BuscaBase {
 
     this.caminhoBusca = this.dfs(inicio, fim, []);
 
-    let optimalPath = [];
-    let current = this.grid[fim.y][fim.x];
-    optimalPath.push(current);
+    let caminhoOtimo = [];
+    let atual = this.grid[fim.y][fim.x];
+    caminhoOtimo.push(atual);
 
-    while (current.y !== inicio.y || current.x !== inicio.x) {
-      current = this.anterior[current.y][current.x];
-      optimalPath.unshift(current);
+    while (atual.y !== inicio.y || atual.x !== inicio.x) {
+      atual = this.anterior[atual.y][atual.x];
+      caminhoOtimo.unshift(atual);
     }
 
-    this.caminhoAgente = this.caminhoBusca;
+    this.caminhoAgente = caminhoOtimo;
     return this.caminhoAgente;
   }
 

@@ -22,9 +22,10 @@ function mesmaPosicao(vec1, vec2) {
   return vec1.x === vec2.x && vec1.y === vec2.y;
 }
 
-class PriorityQueue {
-  constructor() {
-    this.elements = [];
+class FilaPrioritaria {
+  constructor(seletor) {
+    this.elementos = [];
+    this.seletor = seletor;
   }
   enqueue(element, priority) {
     // Create a new object to represent the element and its priority
@@ -32,9 +33,9 @@ class PriorityQueue {
 
     // Loop through the elements in the queue and find the correct position for the new element
     let added = false;
-    for (let i = 0; i < this.elements.length; i++) {
-      if (item[1] < this.elements[i][1]) {
-        this.elements.splice(i, 0, item);
+    for (let i = 0; i < this.elementos.length; i++) {
+      if (item[1] < this.elementos[i][1]) {
+        this.elementos.splice(i, 0, item);
         added = true;
         break;
       }
@@ -42,26 +43,26 @@ class PriorityQueue {
 
     // If the element has the highest priority so far, add it to the end of the queue
     if (!added) {
-      this.elements.push(item);
+      this.elementos.push(item);
     }
   }
 
   // Removes and returns the element with the lowest priority
   dequeue() {
-    return this.elements.shift();
+    return this.elementos.shift();
   }
   isEmpty() {
-    return this.elements.length === 0;
+    return this.elementos.length === 0;
   }
 
-  toEmpty() {
-    this.elements = [];
+  esvaziar() {
+    this.elementos = [];
   }
 
   getPriority(element) {
-    for (let i = 0; i < this.elements.length; i++) {
-      if (this.elements[i][0] === element[0] && this.elements[i][1] === element[1]) {
-        return this.elements[i][1];
+    for (let i = 0; i < this.elementos.length; i++) {
+      if (this.elementos[i][0] === element[0] && this.elementos[i][1] === element[1]) {
+        return this.elementos[i][1];
       }
     }
     return undefined;

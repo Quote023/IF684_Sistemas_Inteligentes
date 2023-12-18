@@ -33,11 +33,6 @@ class BuscaBase {
     this.caminhoBusca.forEach((celula, i) => {
       if (i >= this.movimentosRealizados) return;
       if (!this.listaVizinhos[i]) return;
-      // for (const vizinho of this.listaVizinhos[i]) {
-      //   if (mesmaPosicao(vizinho, this.caminhoBusca[0])) continue;
-      //   circle(vizinho.x * TAM_CELS + TAM_CELS / 2, vizinho.y * TAM_CELS + TAM_CELS / 2, TAM_CELS / 4);
-
-      // }
       circle(celula.x * TAM_CELS + TAM_CELS / 2, celula.y * TAM_CELS + TAM_CELS / 2, TAM_CELS / 2)
     })
     pop();

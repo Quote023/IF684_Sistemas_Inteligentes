@@ -5,18 +5,12 @@ class GS extends BuscaBase {
     this.anterior = [];
   }
 
-  distManhattan(pos, alvo) {
-    let dx = Math.abs(alvo.x - pos.x);
-    let dy = Math.abs(alvo.y - pos.y);
-    return dx + dy;
-  }
-
   buscaGulosa(inicio, alvo) {
-    this.filaPrioritaria.enqueue(inicio, this.distManhattan(inicio, alvo));
+    this.filaPrioritaria.enqueue(inicio, distManhattan(inicio, alvo));
     this.caminhoBusca.push(inicio);
     let encontrado = false;
 
-    while (!this.filaPrioritaria.isEmpty()) {
+    while (!this.filaPrioritaria.estaVazia()) {
       const noAtual = this.filaPrioritaria.dequeue()[0];
       const coluna = noAtual.x;
       const linha = noAtual.y;
@@ -34,7 +28,7 @@ class GS extends BuscaBase {
       for (const vizinho of vizinhos) {
         let colunaVizinho = vizinho.x;
         let linhaVizinho = vizinho.y;
-        let custo = this.distManhattan(vizinho, alvo);
+        let custo = distManhattan(vizinho, alvo);
 
         if (!this.visitados[linhaVizinho][colunaVizinho]) {
           this.visitados[linhaVizinho][colunaVizinho] = true;

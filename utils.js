@@ -14,6 +14,13 @@ function star(x, y, radius1, radius2, npoints) {
   endShape(CLOSE);
 }
 
+
+function distManhattan(pos, alvo) {
+  let dx = Math.abs(alvo.x - pos.x);
+  let dy = Math.abs(alvo.y - pos.y);
+  return dx + dy;
+}
+
 function ultimo(arr) {
   return arr[Math.max(arr.length - 1, 0)];
 }
@@ -51,7 +58,7 @@ class FilaPrioritaria {
   dequeue() {
     return this.elementos.shift();
   }
-  isEmpty() {
+  estaVazia() {
     return this.elementos.length === 0;
   }
 

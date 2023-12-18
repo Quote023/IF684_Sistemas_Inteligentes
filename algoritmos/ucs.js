@@ -1,74 +1,89 @@
 class UCS extends BuscaBase {
-    constructor(terreno) {
-        super(terreno);
-        this.filaPrioritaria = new FilaPrioritaria();
-        this.pais = [];
-    }
-    
-    buscaCustoUniforme(linhaInicio, colunaInicio, alvo) {
-        // Adiciona o nó de início à fila prioritária com custo 0
-        this.filaPrioritaria.enqueue([linhaInicio, colunaInicio], this.matriz[linhaInicio][colunaInicio]);
-        this.adicionarAoCaminhoBusca([linhaInicio, colunaInicio]);
-        let encontrado = false;
+  constructor(terreno) {
+    super(terreno);
+    this.filaPrioritaria = new FilaPrioritaria();
+    this.anterior = [];
+  }
 
-        while (!this.filaPrioritaria.isEmpty()) {
-            // Obtém o nó com o menor custo até agora da fila prioritária
-            let noAtual = this.filaPrioritaria.dequeue();
-            let linha = noAtual[0][0];
-            let coluna = noAtual[0][1];
+  buscaCustoUniforme(inicio, alvo) {
+    // Adiciona o nó de início à fila prioritária com custo 0
+    this.filaPrioritaria.enqueue(inicio, inicio.custo);
+    this.caminhoBusca.push(inicio);
+    let encontrado = false;
 
-            // Verifica se o nó atual é o nó alvo
-            if (linha === alvo[0] && coluna === alvo[1]) {
-                encontrado = true;
-                break;
-            }
+    while (!this.filaPrioritaria.estaVazia()) {
+      // Obtém o nó com o menor custo até agora da fila prioritária
+      let noAtual = this.filaPrioritaria.dequeue();
+      let linha = noAtual[0].y;
+      let coluna = noAtual[0].x;
 
-            // Adiciona o nó atual ao conjunto de visitados
-            this.visitado[linha][coluna] = true;
+      // Verifica se o nó atual é o nó alvo
+      if (mesmaPosicao(noAtual[0], alvo)) {
+        encontrado = true;
+        break;
+      }
 
-            let vizinhos = this.obterVizinhos(linha, coluna);
-            this.adicionarAListaDeVizinhos(vizinhos);
+      // Adiciona o nó atual ao conjunto de visitados
+      this.visitados[linha][coluna] = true;
 
-            // Loop pelos vizinhos do nó atual
-            for (let vizinho of vizinhos) {
-                let linhaVizinho = vizinho[0];
-                let colunaVizinho = vizinho[1];
-                let custo = this.matriz[linhaVizinho][colunaVizinho];
+      let vizinhos = this.obterVizinhos(linha, coluna);
+      this.listaVizinhos.push(vizinhos);
 
-                // Verifica se o vizinho já foi visitado
-                if (!this.visitado[linhaVizinho][colunaVizinho]) {
-                    this.visitado[linhaVizinho][colunaVizinho] = true;
-                    // Calcula o custo total para alcançar o vizinho
-                    let custoTotal = noAtual[1] + custo;
+      // Loop pelos vizinhos do nó atual
+      for (let vizinho of vizinhos) {
+        let linhaVizinho = vizinho.y;
+        let colunaVizinho = vizinho.x;
+        let custo = this.grid[linhaVizinho][colunaVizinho].custo;
 
-                    this.adicionarAoCaminhoBusca([linhaVizinho, colunaVizinho]);
-                    // Adiciona o vizinho à fila prioritária com o custo total como prioridade
-                    this.filaPrioritaria.enqueue([linhaVizinho, colunaVizinho], custoTotal);
-                    this.pais[linhaVizinho][colunaVizinho] = [linha, coluna];
-                }
-            }
+        // Verifica se o vizinho já foi visitado
+        if (!this.visitados[linhaVizinho][colunaVizinho]) {
+          this.visitados[linhaVizinho][colunaVizinho] = true;
+          // Calcula o custo total para alcançar o vizinho
+          let custoTotal = noAtual[1] + custo;
+
+          this.caminhoBusca.push(vizinho);
+          // Adiciona o vizinho à fila prioritária com o custo total como prioridade
+          this.filaPrioritaria.enqueue(vizinho, custoTotal);
+          this.anterior[linhaVizinho][colunaVizinho] = noAtual[0];
         }
-
-        // Se o nó alvo não for encontrado, retorna null
-        if (!encontrado) {
-            return null;
-        }
-
-        this.filaPrioritaria.esvaziar();
-        let caminhoOtimo = [];
-        let atual = [alvo[0], alvo[1], this.matriz[alvo[0]][alvo[1]]];
-        caminhoOtimo.push(atual);
-
-        while (atual[0] !== linhaInicio || atual[1] !== colunaInicio) {
-            atual = this.pais[atual[0]][atual[1]];
-            caminhoOtimo.unshift([atual[0], atual[1], this.matriz[atual[0]][atual[1]]]);
-        }
-
-        return caminhoOtimo;
+      }
     }
 
-    definirCaminho(inicioPonto, fimPonto) {
-        this.inicializarArrays();
-        this.caminhoAgente = this.buscaCustoUniforme(inicioPonto[0], inicioPonto[1], fimPonto);
+    // Se o nó alvo não for encontrado, retorna null
+    if (!encontrado) {
+      return null;
     }
+
+    this.filaPrioritaria.esvaziar();
+    let caminhoOtimo = [];
+    let atual = alvo;
+    caminhoOtimo.push(atual);
+
+    while (atual.y !== inicio.y || atual.x !== inicio.x) {
+      atual = this.anterior[atual.y][atual.x];
+      caminhoOtimo.unshift(atual);
+    }
+
+    this.caminhoAgente = caminhoOtimo;
+    return caminhoOtimo;
+  }
+
+  buscarCaminho(inicioPonto, fimPonto) {
+    for (let i = 0; i < this.grid.length; i++) {
+      this.visitados[i] = [];
+      this.anterior[i] = [];
+      for (let j = 0; j < this.grid[i].length; j++) {
+        this.visitados[i][j] = false;
+        this.anterior[i][j] = null;
+      }
+    }
+
+    this.movimentosRealizados = 0;
+    this.caminhoAgente = [];
+    this.caminhoBusca = [];
+    this.listaVizinhos = [];
+
+    this.caminhoAgente = this.buscaCustoUniforme(inicioPonto, fimPonto);
+    return this.caminhoAgente;
+  }
 }

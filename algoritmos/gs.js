@@ -1,69 +1,80 @@
-class GS extends BuscaBase{
-    constructor(terreno) {
-        super(terreno);
-        this.filaPrioritaria = new FilaPrioritaria();
-        this.anterior = [];
-    }
+class GS extends BuscaBase {
+  constructor(terreno) {
+    super(terreno);
+    this.filaPrioritaria = new FilaPrioritaria();
+    this.anterior = [];
+  }
 
-    distManhattan(linhaAtual, colunaAtual, alvo) {
-        let dx = Math.abs(alvo[0] - linhaAtual);
-        let dy = Math.abs(alvo[1] - colunaAtual);
-        return dx + dy;
-    }
+  buscaGulosa(inicio, alvo) {
+    this.filaPrioritaria.enqueue(inicio, distManhattan(inicio, alvo));
+    this.caminhoBusca.push(inicio);
+    let encontrado = false;
 
-    GS(linhaInicio, colunaInicio, alvo) {
-        this.filaPrioritaria.enfileirar([linhaInicio, colunaInicio], this.distManhattan(linhaInicio, colunaInicio, alvo));
-        this.caminhoBusca.push([linhaInicio, colunaInicio]);
-        let encontrado = false;
+    while (!this.filaPrioritaria.estaVazia()) {
+      const noAtual = this.filaPrioritaria.dequeue()[0];
+      const coluna = noAtual.x;
+      const linha = noAtual.y;
 
-        while (!this.filaPrioritaria.estaVazia()) {
-            let noAtual = this.filaPrioritaria.desenfileirar();
-            let linha = noAtual[0][0];
-            let coluna = noAtual[0][1];
+      if (linha === alvo.y && coluna === alvo.x) {
+        encontrado = true;
+        break;
+      }
 
-            if (linha === alvo[0] && coluna === alvo[1]) {
-                encontrado = true;
-                break;
-            }
+      this.visitados[linha][coluna] = true;
 
-            this.visitado[linha][coluna] = true;
+      let vizinhos = this.obterVizinhos(linha, coluna);
+      this.listaVizinhos.push(vizinhos);
 
-            let vizinhos = this.obterVizinhos(linha, coluna);
-            this.adicionarAListaDeVizinhos(vizinhos);
+      for (const vizinho of vizinhos) {
+        let colunaVizinho = vizinho.x;
+        let linhaVizinho = vizinho.y;
+        let custo = distManhattan(vizinho, alvo);
 
-            for (let i = 0; i < vizinhos.length; i++) {
-                let linhaVizinho = vizinhos[i][0];
-                let colunaVizinho = vizinhos[i][1];
-                let custo = this.distManhattan(linhaVizinho, colunaVizinho, alvo);
+        if (!this.visitados[linhaVizinho][colunaVizinho]) {
+          this.visitados[linhaVizinho][colunaVizinho] = true;
+          let totalCusto = custo;
 
-                if (!this.visitado[linhaVizinho][colunaVizinho]) {
-                    this.visitado[linhaVizinho][colunaVizinho] = true;
-                    let totalCusto = custo;
-
-                    this.adicionarAoCaminhoBusca([linhaVizinho, colunaVizinho]);
-                    this.filaPrioritaria.enfileirar([linhaVizinho, colunaVizinho], totalCusto);
-                    this.anterior[linhaVizinho][colunaVizinho] = [linha, coluna];
-                }
-            }
+          this.caminhoBusca.push(vizinho);
+          this.filaPrioritaria.enqueue(vizinho, totalCusto);
+          this.anterior[linhaVizinho][colunaVizinho] = noAtual;
         }
-
-        if (!encontrado) {
-            return null;
-        }
-
-        this.filaPrioritaria.esvaziar();
-        let caminhoOtimo = [];
-        let atual = [alvo[0], alvo[1], this.matriz[alvo[0]][alvo[1]]];
-        caminhoOtimo.push(atual);
-        while (atual[0] !== linhaInicio || atual[1] !== colunaInicio) {
-            atual = this.anterior[atual[0]][atual[1]];
-            caminhoOtimo.unshift([atual[0], atual[1], this.matriz[atual[0]][atual[1]]]);
-        }
-        return caminhoOtimo;
+      }
     }
 
-    definirCaminho(inicioPonto, fimPonto) {
-        this.inicializarArrays();
-        this.caminhoAgente = this.GS(inicioPonto[0], inicioPonto[1], fimPonto);
+    if (!encontrado) {
+      return null;
     }
+
+    this.filaPrioritaria.esvaziar();
+    let caminhoOtimo = [];
+    let atual = alvo;
+    caminhoOtimo.push(atual);
+
+    while (atual.y !== inicio.y || atual.x !== inicio.x) {
+      atual = this.anterior[atual.y][atual.x];
+      caminhoOtimo.unshift(atual);
+    }
+
+    this.caminhoAgente = caminhoOtimo;
+    return caminhoOtimo;
+  }
+
+  buscarCaminho(inicioPonto, fimPonto) {
+    for (let i = 0; i < this.grid.length; i++) {
+      this.visitados[i] = [];
+      this.anterior[i] = [];
+      for (let j = 0; j < this.grid[i].length; j++) {
+        this.visitados[i][j] = false;
+        this.anterior[i][j] = null;
+      }
+    }
+
+    this.movimentosRealizados = 0;
+    this.caminhoAgente = [];
+    this.caminhoBusca = [];
+    this.listaVizinhos = [];
+
+    this.caminhoAgente = this.buscaGulosa(inicioPonto, fimPonto);
+    return this.caminhoAgente;
+  }
 }
